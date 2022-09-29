@@ -1,5 +1,5 @@
 
-import { useEffect, useState } from "react";
+import {  useState } from "react";
 
 import Title from "./Title";
 import ToDoInput from "./ToDoInput"
@@ -7,54 +7,38 @@ import ToDoList from "./ToDoList"
 import {Container, Row, Col} from "react-bootstrap"
 import "bootstrap/dist/css/bootstrap.min.css"
 
-
+import { v4 as uuidv4 } from 'uuid';
 
 
 const App = () =>{
-  const [lists, setLists] = useState([])
+  
+  const getDataFromLS = () =>{
+    // const data = localStorage.getItem('lists')
+    // return data ? JSON.parse(data) : []
 
-  // useEffect(() =>{
-  //   localStorage.setItem('lists', JSON.stringify(lists))
-  // }, [lists])
-
-  // useEffect(() =>{
-  //   const data = JSON.parse(localStorage.getItem('lists'))
-  //   if(data){
-  //     setLists(data)
-  //   }
-  // }, [])
-
-  const handleComplete = (id) =>{
-    let completedTask = lists.map(task =>{
-      return task.id === Number(id) ? {...task, complete: !task.complete} : {...task}
-    })
-    setLists(completedTask)
+    return localStorage.getItem('lists') ? JSON.parse(localStorage.getItem('lists')) : []
   }
 
-  const handleDelete = () =>{
-    let restTask = lists.filter(task =>{
-      return !task.complete
-    })
-    setLists(restTask)
+  const [lists, setLists] = useState(getDataFromLS())
+
+  const handleDelete = (id) =>{
+    console.log(id);
+    let data = getDataFromLS()
+    
+    data.splice(id, 1)
+    localStorage.setItem('lists', JSON.stringify(data))
+    setLists(data)
   }
 
   const addTask = (task) =>{
-    let newLists = lists
-    newLists = [...newLists, {id: lists.length + 1, task: task, complete: false}]
-    setLists(newLists)
-    localStorage.setItem('lists', JSON.stringify(newLists))
+    let data = getDataFromLS()
+    data = [...data, {id: uuidv4(), task: task}]
+    localStorage.setItem('lists', JSON.stringify(data))
+    setLists(data)
+    
   }
 
-  // const renderTask = () =>{
-  //   const data = JSON.parse(localStorage.getItem('lists'))
-  //   if(data){
-  //     setLists(data)
-  //   }
-  // }
-  // const getDataLocalStorage = () =>{
-  //   return localStorage.getItem('lists') ? JSON.parse(localStorage.getItem('lists')):[]
-  // }
-  // let data = getDataLocalStorage()
+
   return (
     <div className="App">
       <Container>   
@@ -72,7 +56,7 @@ const App = () =>{
 
               <Row className="justify-content-center ">
                 <Col sm={12} lg={8}>
-                  <ToDoList lists={lists} handleComplete={handleComplete} handleDelete={handleDelete}/>
+                  <ToDoList lists={lists}  handleDelete={handleDelete}/>
                 </Col>
               </Row>
        

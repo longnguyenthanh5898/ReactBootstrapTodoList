@@ -19,3 +19,13 @@ code {
   color: rgb(234, 15, 48);
   
 }
+.edit-icon{
+  color:  green;
+  font-size: 32px;
+  
+}
+.delete-icon{
+  color:  red;
+  font-size: 32px;
+  
+}
